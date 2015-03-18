@@ -1,4 +1,4 @@
-/*! p_upload - v1.0.0 - tianxiangbing - http://www.lovewebgames.com/jsmodule/p_upload.html2015-03-18 */
+/*! p_upload - v1.0.0 - tianxiangbing - http://www.lovewebgames.com/jsmodule/p_upload.html 2015-03-18 */
 function P_upload() {
 	var rnd = Math.random().toString().replace('.', '');
 	this.id = 'upload_' + rnd;
@@ -54,6 +54,7 @@ P_upload.prototype = {
 				target: $(this)
 			}, settings);
 			upload.init(options);
+			list.push(upload);
 		});
 		return list;
 	}
