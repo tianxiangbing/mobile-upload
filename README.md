@@ -1,5 +1,6 @@
 # p_upload
 手机上传图片
+例子见[DEMO](http://www.lovewebgames.com/jsmodule/p_upload.html)  
 ##用法
 		<button id="btn_upload">upload</button>
 		<script src="../src/jquery-1.9.1.min.js"></script>
