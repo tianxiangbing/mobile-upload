@@ -1,0 +1,24 @@
+﻿<!DOCTYPE>
+<html>
+	<head>
+		<title>上传图片</title>
+	</head>
+	<body>
+		<button id="btn_upload">upload</button>
+		<script src="../src/jquery-1.9.1.min.js"></script>
+		<script src="../src/p_upload.js"></script>
+		<script>
+		var upload = new P_upload();
+		upload.init({target:$('#btn_upload'),multiple:true,callback:function(result,name,postName){
+			$('body').append('<img src="'+result+'"/><input type="hidden" name="'+postName+'"/>');
+		}});
+		</script>
+		<script src="../src/p_upload-jquery.js"></script>
+		<button class="p_upload">upload</button>
+		<script>
+		$(function(){
+			$('.p_upload').P_upload();
+		});
+		</script>
+	</body>
+</html>
