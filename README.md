@@ -6,7 +6,7 @@
 		<script src="../src/jquery-1.9.1.min.js"></script>
 		<script src="../src/p_upload.js"></script>
 		<script>
-		var upload = new P_upload();
+		var upload = new Mobile_upload();
 		upload.init({target:$('#btn_upload'),multiple:true,callback:function(result,name,postName){
 			$('body').append('<img src="'+result+'"/><input type="hidden" name="'+postName+'"/>');
 		}});
@@ -18,7 +18,7 @@
 		<button class="p_upload">upload</button>
 		<script>
 		$(function(){
-			$('.p_upload').P_upload({multiple:true,callback:function(result,name,postName){
+			$('.p_upload').Mobile_upload({multiple:true,callback:function(result,name,postName){
 				$('body').append('<img src="'+result+'"/><input type="hidden" name="'+postName+'"/>');
 			}});
 		});
