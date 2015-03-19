@@ -1,10 +1,10 @@
-# p_upload
+# mobile-upload
 手机上传图片
-例子见[DEMO](http://www.lovewebgames.com/jsmodule/p_upload.html)  
+例子见[DEMO](http://www.lovewebgames.com/jsmodule/mobile-upload.html)  
 ##用法
 		<button id="btn_upload">upload</button>
 		<script src="../src/jquery-1.9.1.min.js"></script>
-		<script src="../src/p_upload.js"></script>
+		<script src="../src/mobile-upload.js"></script>
 		<script>
 		var upload = new Mobile_upload();
 		upload.init({target:$('#btn_upload'),multiple:true,callback:function(result,name,postName){
@@ -14,16 +14,16 @@
 ***
 ##或者
 		<script src="../src/jquery-1.9.1.min.js"></script>
-		<script src="../src/p_upload-jquery.js"></script>
-		<button class="p_upload">upload</button>
+		<script src="../src/mobile-upload-jquery.js"></script>
+		<button class="mobile-upload">upload</button>
 		<script>
 		$(function(){
-			$('.p_upload').Mobile_upload({multiple:true,callback:function(result,name,postName){
+			$('.mobile-upload').Mobile_upload({multiple:true,callback:function(result,name,postName){
 				$('body').append('<img src="'+result+'"/><input type="hidden" name="'+postName+'"/>');
 			}});
 		});
 		</script>
-***注意：使用jquery的写法，引用的js文件是p_upload-jquery.js  ***
+***注意：使用jquery的写法，引用的js文件是mobile-upload-jquery.js  ***
 #属性和方法
 ##属性
 ###target:
