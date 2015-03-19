@@ -6,10 +6,10 @@
  * Contact: 55342775@qq.com
  */
 (function($) {
-	$.fn.P_upload = function(settings) {
+	$.fn.Mobile_upload = function(settings) {
 		var list = [];
 		$(this).each(function() {
-			var upload = new P_upload();
+			var upload = new Mobile_upload();
 			var options = $.extend({
 				target: $(this)
 			}, settings);

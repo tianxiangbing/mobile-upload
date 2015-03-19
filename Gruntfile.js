@@ -56,13 +56,13 @@ module.exports = function(grunt) {
 				'<%= grunt.template.today("yyyy-mm-dd") %> */\n',
 		},
 		dist: {
-			src: ['src/p_upload.js', 'src/p_upload-jquery.js'],
-			dest: 'dist/p_upload-jquery.js',
+			src: ['src/mobile-upload.js', 'src/mobile-upload-jquery.js'],
+			dest: 'dist/mobile-upload-jquery.js',
 		},
 	};
 	config.uglify.uplifyJquery = {
-		src: ['dist/p_upload-jquery.js'],
-		dest: 'dist/p_upload-jquery.min.js'
+		src: ['dist/mobile-upload-jquery.js'],
+		dest: 'dist/mobile-upload-jquery.min.js'
 	};
 	grunt.initConfig(config);
 	// 加载包含 "uglify" 任务的插件。
