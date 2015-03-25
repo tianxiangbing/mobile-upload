@@ -16,10 +16,14 @@
 		<script src="../src/mobile-upload-jquery.js"></script>
 		<button class="mobile-upload">upload</button>
 		<script>
-		$(function(){
-			$('.mobile-upload').Mobile_upload({multiple:true,callback:function(result,name,postName){
-				$('body').append('<img src="'+result+'" width="200" height="200"/><input type="hidden" name="'+postName+'"/>');
-			}});
+		$(function() {
+			$('.mobile-upload').Mobile_upload({
+				multiple: true,
+				ajax:{url:'data.json'},
+				callback: function(result) {
+					$('body').append('<img src="' + result.url + '" width="200" height="200"/><input type="hidden" name="file"/>');
+				}
+			});
 		});
 		</script>
 	</body>

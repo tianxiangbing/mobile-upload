@@ -20,15 +20,15 @@ Mobile_upload.prototype = {
 		}
 		this.bindEvent();
 	},
-	touch : function(obj, fn) {
+	touch: function(obj, fn) {
 		var move;
-		$(obj).on('click',fn);
+		$(obj).on('click', fn);
 		$(obj).on('touchmove', function(e) {
 			move = true;
 		}).on('touchend', function(e) {
 			e.preventDefault();
 			if (!move) {
-				var returnvalue = fn.call(this, e,'touch');
+				var returnvalue = fn.call(this, e, 'touch');
 				if (!returnvalue) {
 					e.preventDefault();
 					e.stopPropagation();
@@ -39,7 +39,7 @@ Mobile_upload.prototype = {
 	},
 	bindEvent: function(e) {
 		var _this = this;
-		this.touch($(this.target), function(e,t) {
+		this.touch($(this.target), function(e, t) {
 			console.log(t)
 			$(_this.fileInput).trigger('click');
 			return false;
@@ -53,6 +53,21 @@ Mobile_upload.prototype = {
 					var reader = new FileReader();
 					reader.onload = function() {
 						// $('body').append('<img src="'+this.result+'"/><input type="hidden" name="'+_this.name+'"/>');
+						if (_this.settings.ajax) {
+							var data = {};
+							data[_this.settings.ajax.name||'file'] = this.result;
+							$.ajax({
+								type: 'post',
+								url: _this.settings.ajax.url,
+								data:data,
+								datatype: 'json',
+								success: function(result) {
+									if (_this.settings.callback) {
+										_this.settings.callback(result);
+									}
+								}
+							});
+						} else
 						if (_this.settings.callback) {
 							_this.settings.callback(this.result, file, _this.name);
 						}
