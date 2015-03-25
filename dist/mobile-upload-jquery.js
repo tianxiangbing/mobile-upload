@@ -1,4 +1,4 @@
-/*! mobile-upload - v1.0.0 - tianxiangbing - http://www.lovewebgames.com/jsmodule/p_upload.html 2015-03-25 */
+/*! mobile-upload name:田想兵 qq:55342775 tianxiangbing http://www.lovewebgames.com/jsmodule/p_upload.html 2015-03-25*/
 function Mobile_upload() {
 	var rnd = Math.random().toString().replace('.', '');
 	this.id = 'upload_' + rnd;

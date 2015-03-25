@@ -2,10 +2,11 @@
   "family": "tianxiangbing",
   "name": "mobile-upload",
   "description": "手机上传图片",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "田想兵",
-    "url": "http://www.lovewebgames.com/jsmodule/p_upload.html"
+    "url": "http://www.lovewebgames.com/jsmodule/p_upload.html",
+    "qq":"55342775"
   },
   "devDependencies": {
     "grunt-contrib-concat": "^0.5.1",
