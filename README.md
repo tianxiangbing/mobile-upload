@@ -23,7 +23,7 @@
 			}});
 		});
 		</script>
-***注意：使用jquery的写法，引用的js文件是mobile-upload-jquery.js  ***
+***新增返回时直接ajax提交数据到后台  ***
 #属性和方法
 ##属性
 ###target:
