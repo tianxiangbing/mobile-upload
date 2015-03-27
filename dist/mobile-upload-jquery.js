@@ -110,4 +110,4 @@ Mobile_upload.prototype = {
 		});
 		return list;
 	}
-})(jQuery);
+})($);
