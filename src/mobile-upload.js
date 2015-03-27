@@ -66,9 +66,11 @@ Mobile_upload.prototype = {
 				var file = files[i];
 				if (reg_type.test(file.type)) {
 					var reader = new FileReader();
+					_this.settings.startUpload && _this.settings.startUpload(_this.target);
 					reader.onload = function() {
 						_this.createFile();
 						_this.bindFileEvent();
+						_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result);
 						// $('body').append('<img src="'+this.result+'"/><input type="hidden" name="'+_this.name+'"/>');
 						if (_this.settings.ajax) {
 							var data = {};
@@ -82,6 +84,7 @@ Mobile_upload.prototype = {
 									if (_this.settings.callback) {
 										_this.settings.callback(result);
 									}
+									_this.settings.endUpload && _this.settings.endUpload(_this.target, result);
 								}
 							});
 						} else
