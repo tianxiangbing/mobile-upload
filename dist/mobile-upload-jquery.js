@@ -78,7 +78,9 @@ Mobile_upload.prototype = {
 									if (_this.settings.callback) {
 										_this.settings.callback(result);
 									}
-									_this.settings.endUpload && _this.settings.endUpload(_this.target, result);
+								},
+								complete:function(){
+									_this.settings.endUpload && _this.settings.endUpload(_this.target);
 								}
 							});
 						} else
