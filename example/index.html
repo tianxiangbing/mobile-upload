@@ -5,8 +5,8 @@
 	</head>
 	<body>
 		<button id="btn_upload">upload</button>
-		<script src="../src/jquery-1.9.1.min.js"></script>
-		<script src="../src/mobile-upload.js"></script>
+		<script src="../dist/zepto.min.js"></script>
+		<script src="../dist/mobile-upload.min.js"></script>
 		<script>
 		var upload = new Mobile_upload();
 		upload.init({target:$('#btn_upload'),multiple:true,callback:function(result,name,postName){
