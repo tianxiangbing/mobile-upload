@@ -17,10 +17,10 @@ module.exports = function(grunt) {
 	config.publishVersion = config.pkg.version;
 	config.uglify = {
 		options: {
-			banner: '/*! version:<%=pkg.version%>  <%= pkg.name %> name:<%=pkg.author.name%> qq:<%=pkg.author.qq%> <%=pkg.family%> <%=pkg.author.url%> <%= grunt.template.today("yyyy-mm-dd") %>*/\n'
+			banner: '/*! <%= pkg.name %>  v<%= pkg.version %>\n* author:<%=pkg.family%> email:<%=pkg.author.email%>\n* demo:<%=pkg.author.url%> \n* git:<%=pkg.git%>  <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 		},
 		build: {
-			src: ['src/<%= pkg.name %>.js', '!*.min.css'],
+			src: ['src/<%= pkg.name %>.js'],
 			dest: 'dist/<%= pkg.name %>.min.js'
 		}
 	};
@@ -48,28 +48,21 @@ module.exports = function(grunt) {
 			flatten: true,
 			filter: 'isFile',
 		},
-	};
-	config.concat = {
-		options: {
-			stripBanners: true,
-			banner: '/*! version:<%=pkg.version%>  <%= pkg.name %> name:<%=pkg.author.name%> qq:<%=pkg.author.qq%> <%=pkg.family%> <%=pkg.author.url%> <%= grunt.template.today("yyyy-mm-dd") %>*/\n'
-		},
-		dist: {
-			src: ['src/mobile-upload.js', 'src/mobile-upload-jquery.js'],
-			dest: 'dist/mobile-upload-jquery.js',
-		},
+		jquery:{
+			src: 'src/<%= pkg.name %>.js',
+			dest: 'dist/<%= pkg.name %>-jquery.js'
+		}
 	};
 	config.uglify.uplifyJquery = {
-		src: ['dist/mobile-upload-jquery.js'],
-		dest: 'dist/mobile-upload-jquery.min.js'
+		src: ['dist/<%= pkg.name %>-jquery.js'],
+		dest: 'dist/<%= pkg.name %>-jquery.min.js'
 	};
 	grunt.initConfig(config);
 	// 加载包含 "uglify" 任务的插件。
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	// 默认被执行的任务列表。
-	grunt.registerTask('default', ['uglify', 'cssmin', 'copy', 'concat', 'uglify:uplifyJquery']);
+	grunt.registerTask('default', ['uglify', 'cssmin', 'copy', 'uglify:uplifyJquery']);
 };

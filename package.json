@@ -1,8 +1,8 @@
 {
   "family": "tianxiangbing",
   "name": "mobile-upload",
-  "description": "手机上传图片",
-  "version": "1.0.1",
+  "description": "js手机上传图片",
+  "version": "1.0.2",
   "author": {
     "name": "田想兵",
     "url": "http://www.lovewebgames.com/jsmodule/p_upload.html",
