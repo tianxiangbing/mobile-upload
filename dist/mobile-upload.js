@@ -1,5 +1,6 @@
 /*
  * Created with Sublime Text 2.
+ * license: http://www.lovewebgames.com/jsmodule/index.html
  * User: 田想兵
  * Date: 2015-03-17
  * Time: 18:06:23
@@ -40,13 +41,6 @@
 			this.target = this.settings.target;
 			this.createFile();
 			this.name = this.settings.name || "files";
-			this.fileInput.css({
-				'opacity': '0',
-				width: 1
-			});
-			if (this.settings.multiple) {
-				this.fileInput.attr('multiple', 'multiple');
-			}
 			this.bindEvent();
 		},
 		touch: function(obj, fn) {
@@ -75,17 +69,31 @@
 			_this.fileInput && _this.fileInput.remove();
 			$(_this.target).after('<input type="file" style="position:absolute;top:0;left:0;width:1px;height:1px;"  accept="image/*" id="' + _this.id + '"/>');
 			_this.fileInput = $('#' + _this.id);
+			this.fileInput.css({
+				'opacity': '0',
+				width: 1
+			});
+			if (this.settings.multiple) {
+				this.fileInput.attr('multiple', 'multiple');
+			}
 		},
 		bindEvent: function(e) {
 			var _this = this;
 			this.touch($(this.target), function(e, t) {
-				$(_this.fileInput).trigger('click');
+				if ($(this).parent().siblings().size() >= _this.settings.max) {
+					_this.settings.maxCallback&&_this.settings.maxCallback(this);
+				} else {
+					$(_this.fileInput).trigger('click');
+				}
 				return false;
 			});
 			_this.bindFileEvent();
 		},
 		bindFileEvent: function() {
 			var _this = this;
+			$(this.fileInput).click(function(e) {
+				e.stopPropagation();
+			});
 			$(this.fileInput).change(function(e) {
 				var reg_type = /^image\//i;
 				var files = e.target.files;
@@ -95,10 +103,10 @@
 						var reader = new FileReader();
 						_this.settings.startUpload && _this.settings.startUpload(_this.target);
 						reader.onload = function() {
+							//清除缓存
 							_this.createFile();
 							_this.bindFileEvent();
 							_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result);
-							// $('body').append('<img src="'+this.result+'"/><input type="hidden" name="'+_this.name+'"/>');
 							if (_this.settings.ajax) {
 								var data = {};
 								data[_this.settings.ajax.name || 'file'] = this.result;
