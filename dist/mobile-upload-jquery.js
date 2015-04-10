@@ -42,6 +42,7 @@
 			this.createFile();
 			this.name = this.settings.name || "files";
 			this.bindEvent();
+			this.bindFileChange();
 		},
 		touch: function(obj, fn) {
 			var move;
@@ -67,12 +68,8 @@
 		createFile: function() {
 			var _this = this;
 			_this.fileInput && _this.fileInput.remove();
-			$(_this.target).after('<input type="file" style="position:absolute;top:0;left:0;width:1px;height:1px;"  accept="image/*" id="' + _this.id + '"/>');
-			_this.fileInput = $('#' + _this.id);
-			this.fileInput.css({
-				'opacity': '0',
-				width: 1
-			});
+			_this.fileInput = $('<input type="file" style="position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;"  accept="image/*" id="' + _this.id + '"/>');
+			$(_this.target).after(_this.fileInput);
 			if (this.settings.multiple) {
 				this.fileInput.attr('multiple', 'multiple');
 			}
@@ -81,7 +78,7 @@
 			var _this = this;
 			this.touch($(this.target), function(e, t) {
 				if ($(this).parent().siblings().size() >= _this.settings.max) {
-					_this.settings.maxCallback&&_this.settings.maxCallback(this);
+					_this.settings.maxCallback && _this.settings.maxCallback(this);
 				} else {
 					$(_this.fileInput).trigger('click');
 				}
@@ -94,7 +91,10 @@
 			$(this.fileInput).click(function(e) {
 				e.stopPropagation();
 			});
-			$(this.fileInput).change(function(e) {
+		},
+		bindFileChange: function() {
+			var _this = this;
+			$('body').on('change', '#'+_this.id, function(e) {
 				var reg_type = /^image\//i;
 				var files = e.target.files;
 				for (var i = files.length - 1; i >= 0; i--) {
