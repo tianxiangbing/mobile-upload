@@ -1,56 +1,69 @@
 /*
  * Created with Sublime Text 2.
- * license: http://www.lovewebgames.com/jsmodule/index.html
  * User: 田想兵
- * Date: 2015-03-17
- * Time: 18:06:23
+ * Date: 2015-03-26
+ * Time: 14:39:30
  * Contact: 55342775@qq.com
  */
 ;
 (function(root, factory) {
 	//amd
 	if (typeof define === 'function' && define.amd) {
-		define(['$'], factory);
+		define(['$', 'handlebars'], factory);
 	} else if (typeof exports === 'object') { //umd
 		module.exports = factory();
 	} else {
-		root.Mobile_upload = factory(window.Zepto || window.jQuery || $);
+		root.ScrollLoad = factory(window.Zepto || window.jQuery || $, Handlebars);
 	}
-})(this, function($) {
-	$.fn.Mobile_upload = function(settings) {
+})(this, function($, Handlebars) {
+	Handlebars.registerHelper('isnodata', function(data,options) {
+		if(!data || data.length ==0){
+			return options.fn(this);
+		}else{
+			return options.inverse(this);
+		}
+	});
+	$.fn.ScrollLoad = function(settings) {
 		var list = [];
 		$(this).each(function() {
-			var upload = new Mobile_upload();
+			var scroll = new ScrollLoad();
 			var options = $.extend({
-				target: $(this)
+				container: $(this)
 			}, settings);
-			upload.init(options);
-			list.push(upload);
+			scroll.init(options);
+			list.push(scroll);
 		});
 		return list;
 	};
-
-	function Mobile_upload() {
-		var rnd = Math.random().toString().replace('.', '');
-		this.id = 'upload_' + rnd;
-		this.fileInput;
-	}
-	Mobile_upload.prototype = {
+	var ScrollLoad = function() {
+		this.container;
+		this.url;
+		this.param;
+		this.page = 1;
+		this.pagename = 'page'
+		this.loadmore;
+	};
+	ScrollLoad.prototype = {
 		init: function(settings) {
-			this.settings = $.extend({}, this.settings, settings);
-			this.target = this.settings.target;
-			this.createFile();
-			this.name = this.settings.name || "files";
+			this.settings = $.extend({}, settings);
+			this.load = this.settings.loadmore || $('<div class="ui-loading">点击加载更多</div>');
+			this.scrolltrigger = $(this.settings.scrolltrigger || window);
+			this.container = this.settings.container;
+			if (this.container.children().size() == 0) {
+				this.container.append('<div class="scroll-content"/>');
+			}
+			this.container.append(this.load);
+			this.url = this.settings.url;
+			this.page = this.settings.page || 1;
+			this.pagename = settings.pagename || 'page';
+			this.param = $.extend({}, this.settings.param);
+			this.param[this.pagename] = this.page;
 			this.bindEvent();
-			this.bindFileChange();
+			this.checkPosition();
 		},
 		touch: function(obj, fn) {
 			var move;
-			$(obj).on('click', click);
-
-			function click(e) {
-				return fn.call(this, e);
-			}
+			$(obj).on('click', fn);
 			$(obj).on('touchmove', function(e) {
 				move = true;
 			}).on('touchend', function(e) {
@@ -65,78 +78,76 @@
 				move = false;
 			});
 		},
-		createFile: function() {
-			var _this = this;
-			_this.fileInput && _this.fileInput.remove();
-			_this.fileInput = $('<input type="file" style="position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;"  accept="image/*" id="' + _this.id + '"/>');
-			$(_this.target).after(_this.fileInput);
-			if (this.settings.multiple) {
-				this.fileInput.attr('multiple', 'multiple');
+		bindEvent: function() {
+			if (this.container.size()) {
+				var _this = this;
+				if (_this.settings.scrollLoad) {
+					_this.scrolltrigger.scroll(function() {
+						_this.checkPosition();
+					});
+				}
+				_this.touch(_this.load, function() {
+					_this.ajaxData();
+				});
 			}
 		},
-		bindEvent: function(e) {
+		checkPosition: function() {
+			var offsetH = $(this.container).children().first().height();
+			var height = this.load.height();
+			var clientHeight = this.scrolltrigger[0].clientHeight || document.documentElement.clientHeight || document.body.clientHeight; //可视区域
+			var clientWidth = this.scrolltrigger[0].clientWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			var scrollTop = this.scrolltrigger.scrollTop();
+			if (offsetH + height / 2 <= clientHeight + scrollTop) {
+				this.ajaxData();
+			}
+		},
+		ajaxData: function() {
 			var _this = this;
-			this.touch($(this.target), function(e, t) {
-				if ($(this).parent().siblings().size() >= _this.settings.max) {
-					_this.settings.maxCallback && _this.settings.maxCallback(this);
-				} else {
-					$(_this.fileInput).trigger('click');
-				}
+			if (_this.ajax) {
 				return false;
-			});
-			_this.bindFileEvent();
-		},
-		bindFileEvent: function() {
-			var _this = this;
-			$(this.fileInput).click(function(e) {
-				e.stopPropagation();
-			});
-		},
-		bindFileChange: function() {
-			var _this = this;
-			$('body').on('change', '#'+_this.id, function(e) {
-				var reg_type = /^image\//i;
-				var files = e.target.files;
-				for (var i = files.length - 1; i >= 0; i--) {
-					var file = files[i];
-					if (reg_type.test(file.type)) {
-						var reader = new FileReader();
-						_this.settings.startUpload && _this.settings.startUpload(_this.target);
-						reader.onload = function() {
-							//清除缓存
-							_this.createFile();
-							_this.bindFileEvent();
-							_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result);
-							if (_this.settings.ajax) {
-								var data = {};
-								data[_this.settings.ajax.name || 'file'] = this.result;
-								$.ajax({
-									type: 'post',
-									url: _this.settings.ajax.url,
-									data: data,
-									dataType: 'json',
-									success: function(result) {
-										if (_this.settings.callback) {
-											_this.settings.callback(result);
-										}
-									},
-									complete: function() {
-										_this.settings.endUpload && _this.settings.endUpload(_this.target);
-									}
-								});
-							} else
-							if (_this.settings.callback) {
-								_this.settings.callback(this.result, file, _this.name);
-							}
-						};
-						reader.readAsDataURL(file);
+			}
+			_this.ajax = true;
+			this.load.html('正在加载中...');
+			this.param[this.pagename] = this.page;
+			$.ajax({
+				url: _this.url,
+				type: _this.settings.type || "get",
+				dataType: "json",
+				cache: false,
+				data: _this.param,
+				timeout: 30000,
+				success: function(result) {
+					if (_this.settings.format) {
+						_this.settings.format(this.container, result);
 					} else {
-						alert("不是图片文件");
-						break;
-					}
-				};
+						_this.format(result);
+					};
+					_this.page++;
+				},
+				complete: function() {
+					// setTimeout(function() {
+						_this.ajax = false;
+					// }, 500);
+					_this.load.html('点击加载更多');
+					_this.checkPosition();
+				}
 			});
+		},
+		format: function(result) {
+			if((!result.data ||　result.data.length==0) && this.page == 1){
+				result.isnodata = true;
+			}
+			if (!(result.data && result.data.length)) {
+				result.nodata = true;
+				this.load.remove();
+			}
+			var tpl = typeof this.settings.tpl === "string" ? $(this.settings.tpl) : this.settings.tpl;
+			var source = tpl.html();
+			var template = Handlebars.compile(source);
+			var html = template(result);
+			this.container.children().first().append(html)
+			this.settings.callback && this.settings.callback(this.container, result);
 		}
 	};
-	return Mobile_upload;
+	return ScrollLoad;
 });
