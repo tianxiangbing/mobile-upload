@@ -1,12 +1,13 @@
-﻿<!DOCTYPE>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<title>上传图片</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	</head>
 	<body>
 		<button id="btn_upload">upload</button>
-		<script src="../dist/zepto.min.js"></script>
-		<script src="../dist/mobile-upload.min.js"></script>
+		<script src="../src/zepto.js"></script>
+		<script src="../src/mobile-upload.js"></script>
 		<script>
 		var upload = new Mobile_upload();
 		upload.init({target:$('#btn_upload'),multiple:true,callback:function(result,name,postName){

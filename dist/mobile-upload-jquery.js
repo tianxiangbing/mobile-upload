@@ -73,6 +73,7 @@
 			if (this.settings.multiple) {
 				this.fileInput.attr('multiple', 'multiple');
 			}
+			this.bindFileChange();
 		},
 		bindEvent: function(e) {
 			var _this = this;
@@ -94,57 +95,67 @@
 		},
 		bindFileChange: function() {
 			var _this = this;
-			$('body').on('change', '#' + _this.id, function(e) {
+			$('#' + _this.id).off('change');
+			$('#' + _this.id).on('change', function(e) {
 				var reg_type = /^image\//i;
 				var files = e.target.files;
-				for (var i = files.length - 1; i >= 0; i--) {
-					var file = files[i];
-					(function(file) {
-						var rnd = Math.random().toString().replace('.', '');
-						var i = 'up_' + rnd;
-						if (reg_type.test(file.type)) {
-							if ($('#' + _this.id).parent().siblings().size()+1 >= _this.settings.max) {
-								_this.settings.maxCallback && _this.settings.maxCallback($('#' + _this.id));
-							}
-							var reader = new FileReader();
-							_this.settings.startUpload && _this.settings.startUpload(_this.target, i);
-							reader.onload = function() {
-								//清除缓存
-								_this.createFile();
-								_this.bindFileEvent();
-								_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result, i);
-								if (_this.settings.ajax) {
-									var data = {};
-									data[_this.settings.ajax.name || 'file'] = this.result;
-									$.ajax({
-										type: 'post',
-										url: _this.settings.ajax.url,
-										data: data,
-										dataType: 'json',
-										success: function(result) {
-											if (_this.settings.callback) {
-												_this.settings.callback(result, i);
-											}
-										},
-										complete: function() {
-											_this.settings.endUpload && _this.settings.endUpload(_this.target, i);
-										}
-									});
-									this.result= null;
-									reader.onload = null;
-									reader = null;
-								} else
-								if (_this.settings.callback) {
-									_this.settings.callback(this.result, file, _this.name, i);
+				if (_this.settings.iframe) {
+					//ifrmae post
+					_this.settings.startUpload && _this.settings.startUpload(_this.target);
+					_this.postFrame(this,e);
+				} else
+				if (files) {
+					for (var i = files.length - 1; i >= 0; i--) {
+						var file = files[i];
+						(function(file) {
+							var rnd = Math.random().toString().replace('.', '');
+							var i = 'up_' + rnd;
+							if (reg_type.test(file.type)) {
+								if ($('#' + _this.id).parent().siblings().size() + 1 >= _this.settings.max) {
+									_this.settings.maxCallback && _this.settings.maxCallback($('#' + _this.id));
 								}
-							};
-							reader.readAsDataURL(file);
-						} else {
-							alert("不是图片文件");
-							// break;
-						}
-					})(file)
-				};
+								if (window.FileReader) {
+									var reader = new FileReader();
+									_this.settings.startUpload && _this.settings.startUpload(_this.target, i);
+									reader.onload = function() {
+										//清除缓存
+										_this.createFile();
+										_this.bindFileEvent();
+										_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result, i);
+										if (_this.settings.ajax) {
+											var data = {};
+											data[_this.settings.ajax.name || 'file'] = this.result;
+											$.ajax({
+												type: 'post',
+												url: _this.settings.ajax.url,
+												data: data,
+												dataType: 'json',
+												success: function(result) {
+													if (_this.settings.callback) {
+														_this.settings.callback(result, i);
+													}
+												},
+												complete: function() {
+													_this.settings.endUpload && _this.settings.endUpload(_this.target, i);
+												}
+											});
+											this.result = null;
+											reader.onload = null;
+											reader = null;
+										} else
+										if (_this.settings.callback) {
+											_this.settings.callback(this.result, file, _this.name, i);
+										}
+									};
+									reader.readAsDataURL(file);
+								}
+							} else {
+								alert("不是图片文件");
+								// break;
+							}
+						})(file)
+					};
+				}
 			});
 		}
 	};
