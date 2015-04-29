@@ -101,13 +101,15 @@
 				var files = e.target.files;
 				if (_this.settings.iframe) {
 					//ifrmae post
-					_this.settings.startUpload && _this.settings.startUpload(_this.target);
-					_this.postFrame(this,e);
+					var key = "up_" + Math.random().toString().replace('.', '');
+					_this.settings.startUpload && _this.settings.startUpload(_this.target, key);
+					_this.postFrame(this, e, key);
 				} else
 				if (files) {
 					for (var i = files.length - 1; i >= 0; i--) {
 						var file = files[i];
 						(function(file) {
+							var key = "key_" + Math.random().toString().replace('.', '');
 							var rnd = Math.random().toString().replace('.', '');
 							var i = 'up_' + rnd;
 							if (reg_type.test(file.type)) {
