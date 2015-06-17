@@ -103,7 +103,7 @@
 					//ifrmae post
 					var key = "up_" + Math.random().toString().replace('.', '');
 					if (_this.postFrame(this, e, key)) {
-						_this.settings.startUpload && _this.settings.startUpload(_this.target, key);
+						_this.settings.startUpload && _this.settings.startUpload(_this.fileInput, key);
 					}
 				} else
 				if (files) {
@@ -119,12 +119,12 @@
 								}
 								if (window.FileReader) {
 									var reader = new FileReader();
-									_this.settings.startUpload && _this.settings.startUpload(_this.target, i);
+									_this.settings.startUpload && _this.settings.startUpload(_this.fileInput, i);
 									reader.onload = function() {
 										//清除缓存
 										_this.createFile();
 										_this.bindFileEvent();
-										_this.settings.imageReady && _this.settings.imageReady(_this.target, this.result, i);
+										_this.settings.imageReady && _this.settings.imageReady(_this.fileInput, this.result, i);
 										if (_this.settings.ajax) {
 											var data = {};
 											data[_this.settings.ajax.name || 'file'] = this.result;
@@ -139,7 +139,7 @@
 													}
 												},
 												complete: function() {
-													_this.settings.endUpload && _this.settings.endUpload(_this.target, i);
+													_this.settings.endUpload && _this.settings.endUpload(_this.fileInput, i);
 												}
 											});
 											this.result = null;
