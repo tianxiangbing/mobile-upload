@@ -137,7 +137,7 @@
 												dataType: 'json',
 												success: function(result) {
 													if (_this.settings.callback) {
-														_this.settings.callback(this.result, file, _this.name,_this.target, i);
+														_this.settings.callback(result, file, _this.name,_this.target, i);
 													}
 												},
 												complete: function() {
